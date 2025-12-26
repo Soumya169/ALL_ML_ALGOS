@@ -23,7 +23,7 @@ import seaborn as sns
 
 st.set_page_config(
     page_title="Supply Chain ML Platform",
-    page_icon="🚀",
+    page_icon="_",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -67,7 +67,7 @@ st.markdown("""
         font-weight: 600;
     }
 </style>
-""", unsafe_allow_html=True)
+""",unsafe_allow_html=True)
 
 @st.cache_data
 def generate_dataset(num_records=10000):
@@ -219,11 +219,10 @@ def train_all_models(X_train, X_test, y_train, y_test):
 
 ####################### MAIN APP ##################
 def main():
-    # Header
     st.markdown('<h1 class="main-header">🚀 Smart Supply Chain Forecasting Platform</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-header">AI-Powered Demand Prediction with 9 ML Algorithms</p>', unsafe_allow_html=True)
     
-    # Sidebar
+
     st.sidebar.title("⚙️ Configuration")
     
     dataset_size = st.sidebar.slider("Dataset Size", 1000, 50000, 10000, 1000)
@@ -234,11 +233,10 @@ def main():
     page = st.sidebar.radio("📑 Navigation", 
                             ["ℹ️ About","📊 Predict Demand", "🤖 Model Comparison", "📈 Data Summary"])
     
-    # Generate and prepare data
-    with st.spinner("🔄 Generating dataset..."):
+    with st.spinner("🔄 Generating dataset"):
         df = generate_dataset(dataset_size)
     
-    with st.spinner("🔄 Engineering features..."):
+    with st.spinner("🔄 Engineering feature"):
         df = create_features(df)
     
     # Prepare data for modeling
@@ -255,7 +253,6 @@ def main():
             'price_to_avg_ratio', 'promo_weekend', 'stock_to_demand_ratio'
         ])
     
-    # Encode categoricals
     le_category = LabelEncoder()
     le_warehouse = LabelEncoder()
     df['category_encoded'] = le_category.fit_transform(df['category'])
@@ -263,12 +260,10 @@ def main():
     
     feature_cols.extend(['category_encoded', 'warehouse_encoded'])
     
-    # Prepare data
     df_clean = df.dropna(subset=feature_cols + ['quantity_sold'])
     X = df_clean[feature_cols]
     y = df_clean['quantity_sold']
     
-    # Split and scale
     df_clean = df_clean.sort_values('date')
 
     split_date = df_clean['date'].quantile(0.8)
@@ -286,7 +281,6 @@ def main():
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    # Train models (cached)
     results_df, trained_models = train_all_models(X_train_scaled, X_test_scaled, y_train, y_test)
     
     if page == "ℹ️ About":
@@ -316,7 +310,6 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
     with col1:
         st.subheader("🔧 Input Features")
         
-        # Create form
         with st.form("prediction_form"):
             col_a, col_b, col_c = st.columns(3)
             
@@ -367,17 +360,13 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
                 'warehouse_encoded': le_warehouse.transform([warehouse])[0]
             }
             
-            # Create feature array
             X_input = np.array([[input_data.get(col, 0) for col in feature_cols]])
             X_input_scaled = scaler.transform(X_input)
             
-            # Predict
             prediction = best_model.predict(X_input_scaled)[0]
             
-            # Display result
             st.success("✅ Prediction Complete!")
             
-            # Prediction card
             st.markdown(f"""
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                         padding: 2rem; border-radius: 10px; color: white; text-align: center; margin: 2rem 0;">
@@ -387,7 +376,6 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
             </div>
             """, unsafe_allow_html=True)
             
-            # Recommendations
             st.subheader("💡 Recommendations")
             if prediction > stock_level:
                 st.warning(f"⚠️ Predicted demand ({prediction:.0f}) exceeds current stock ({stock_level}). Consider reordering.")
@@ -397,7 +385,6 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
             if promotion == 1:
                 st.success("✓ Promotion active - expect higher demand.")
             
-            # Show model used
             st.info(f"🤖 Prediction made using: **{best_model_name}** (R² = {results_df.iloc[0]['test_r2']:.4f})")
     
     with col2:
@@ -410,20 +397,16 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
         st.metric("Avg Quantity Sold", f"{avg_quantity:.0f}", "units")
         st.metric("Avg Price", f"${avg_price:.2f}")
         st.metric("Promotion Rate", f"{promo_rate:.1f}%")
-        
-        # Historical trend
         st.subheader("📈 Historical Trend")
         daily_sales = df.groupby('date')['quantity_sold'].sum().reset_index()
-        fig = px.line(daily_sales, x='date', y='quantity_sold', 
-                     title='Daily Sales Volume')
+        fig = px.line(daily_sales, x='date', y='quantity_sold',title='Daily Sales Volume')
         fig.update_layout(height=300)
         st.plotly_chart(fig, use_container_width=True)
 
-# ==================== MODEL COMPARISON PAGE ====================
+###################### MODEL COMPARISON PAGE ####################
 def show_model_comparison_page(results_df, trained_models, y_test):
     st.header("🤖 Model Performance Comparison")
     
-    # Best model highlight
     best_model = results_df.iloc[0]
     
     st.markdown(f"""
@@ -446,40 +429,28 @@ def show_model_comparison_page(results_df, trained_models, y_test):
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Comparison table
     st.subheader("📊 All Models Comparison")
-    
-    # Format dataframe for display
     display_df = results_df.copy()
-    display_df = display_df.style.background_gradient(subset=['test_rmse'], cmap='RdYlGn_r')\
-                                  .background_gradient(subset=['test_r2'], cmap='RdYlGn')\
+    display_df = display_df.style.background_gradient(subset=['test_rmse'], cmap='RdYlGn_r')\.background_gradient(subset=['test_r2'], cmap='RdYlGn')\
                                   .format({'test_rmse': '{:.2f}', 'test_mae': '{:.2f}', 
                                           'test_r2': '{:.4f}', 'test_mape': '{:.2f}%'})
     
     st.dataframe(display_df, use_container_width=True)
-    
-    # Visualizations
     col1, col2 = st.columns(2)
     
     with col1:
         # RMSE comparison
-        fig_rmse = px.bar(results_df, x='model', y='test_rmse', 
-                         title='Test RMSE Comparison (Lower is Better)',
-                         color='test_rmse', color_continuous_scale='RdYlGn_r')
+        fig_rmse = px.bar(results_df, x='model', y='test_rmse',title='Test RMSE Comparison (Lower is Better)',color='test_rmse', color_continuous_scale='RdYlGn_r')
         fig_rmse.update_layout(showlegend=False, xaxis_tickangle=-45)
         st.plotly_chart(fig_rmse, use_container_width=True)
     
     with col2:
-        # R² comparison
         fig_r2 = px.bar(results_df.sort_values('test_r2', ascending=False), 
                        x='model', y='test_r2',
                        title='R² Score Comparison (Higher is Better)',
                        color='test_r2', color_continuous_scale='RdYlGn')
         fig_r2.update_layout(showlegend=False, xaxis_tickangle=-45)
         st.plotly_chart(fig_r2, use_container_width=True)
-    
-    # Prediction vs Actual scatter plots
     st.subheader("📈 Prediction Quality Visualization")
     
     selected_models = st.multiselect(
@@ -495,7 +466,6 @@ def show_model_comparison_page(results_df, trained_models, y_test):
         for idx, model_name in enumerate(selected_models, 1):
             y_pred = trained_models[model_name]['predictions']
             
-            # Sample for cleaner visualization
             sample_indices = np.random.choice(len(y_test), min(1000, len(y_test)), replace=False)
             y_test_sample = y_test.iloc[sample_indices]
             y_pred_sample = y_pred[sample_indices]
@@ -506,14 +476,10 @@ def show_model_comparison_page(results_df, trained_models, y_test):
                           marker=dict(size=5, opacity=0.6)),
                 row=1, col=idx
             )
-            
-            # Perfect prediction line
             min_val = min(y_test_sample.min(), y_pred_sample.min())
             max_val = max(y_test_sample.max(), y_pred_sample.max())
             fig.add_trace(
-                go.Scatter(x=[min_val, max_val], y=[min_val, max_val],
-                          mode='lines', name='Perfect Prediction',
-                          line=dict(color='red', dash='dash')),
+                go.Scatter(x=[min_val, max_val], y=[min_val, max_val],mode='lines', name='Perfect Prediction',line=dict(color='red', dash='dash')),
                 row=1, col=idx
             )
             
@@ -553,7 +519,7 @@ def show_model_comparison_page(results_df, trained_models, y_test):
         Standard deviation: {results_df['test_rmse'].std():.2f}
         """)
 
-# ==================== DATA SUMMARY PAGE ====================
+################ DATA SUMMARY PAGE ####################
 def show_data_summary_page(df):
     st.header("📈 Dataset Overview")
     
@@ -592,14 +558,14 @@ def show_data_summary_page(df):
         </div>
         """, unsafe_allow_html=True)
     
-    # Date range
+    ####################### Date range ###############
     st.subheader("📅 Data Timeline")
     col1, col2, col3 = st.columns(3)
     col1.metric("Start Date", df['date'].min().strftime('%Y-%m-%d'))
     col2.metric("End Date", df['date'].max().strftime('%Y-%m-%d'))
     col3.metric("Date Range", f"{(df['date'].max() - df['date'].min()).days} days")
     
-    # Distribution visualizations
+    ##################### Distribution visualizations ##############
     st.subheader("📊 Distributions")
     
     col1, col2 = st.columns(2)
@@ -674,10 +640,10 @@ def show_data_summary_page(df):
 
 # ==================== ABOUT PAGE ====================
 def show_about_page():
-    st.header("ℹ️ About This Application")
+    st.header("ℹ️ About This Project")
     
     st.markdown("""
-    ## 🚀 Smart Supply Chain Forecasting Platform
+    ##  Smart Supply Chain Forecasting Platform
     
     A comprehensive machine learning application for demand forecasting in supply chain management.
     
@@ -686,7 +652,7 @@ def show_about_page():
     - **9 ML Algorithms**: Linear Regression, Ridge, Lasso, Decision Tree, Random Forest, 
       Gradient Boosting, XGBoost, SVR, and KNN
     - **Real-time Predictions**: Interactive form for demand forecasting
-    - **Model Comparison**: Side-by-side performance metrics and visualizations
+    - **Model Comparison**: Side by side performance metrics and visualizations
     - **Data Analysis**: Comprehensive dataset exploration and insights
     - **Feature Engineering**: Advanced features including lag variables and rolling statistics
     
@@ -718,10 +684,10 @@ def show_about_page():
     
     ### 📈 Evaluation Metrics
     
-    - **RMSE** (Root Mean Squared Error): Measures prediction accuracy
+    - **RMS** (Root Mean Square): Measures prediction accuracy
     - **MAE** (Mean Absolute Error): Average prediction error
     - **R²** (R-squared): Goodness of fit
-    - **MAPE** (Mean Absolute Percentage Error): Percentage error
+    - **MAP** (Mean Absolute Percentage): Percentage error
     
     ### 🛠️ Technology Stack
     
@@ -729,7 +695,7 @@ def show_about_page():
     - **ML Libraries**: scikit-learn, XGBoost
     - **Data Processing**: pandas, NumPy
     - **Visualization**: Plotly, Matplotlib, Seaborn
-    - **Language**: Python 3.8+
+    - **Language**: Python 
     
     ### 💼 Use Cases
     
@@ -739,103 +705,14 @@ def show_about_page():
     - Supply chain planning
     - Trend analysis
     
-    ### 📝 How to Use
-    
-    1. **Predict Demand**: Enter product details and get instant demand predictions
-    2. **Compare Models**: Analyze performance across all ML algorithms
-    3. **Explore Data**: Understand dataset characteristics and patterns
-    
-    ### 🎓 Resume Highlights
-    
     This project demonstrates:
-    - ✅ Machine Learning model development and deployment
-    - ✅ Data preprocessing and feature engineering
-    - ✅ Interactive web application development
-    - ✅ Data visualization and storytelling
-    - ✅ Production-ready code architecture
+    - Machine Learning model development and deployment
+    - Data preprocessing and feature engineering
+    - Interactive web application development
+    - Data visualization and storytelling
+    - Production-ready code architecture
     
-    ### 📧 Contact & Links
-    
-    - **GitHub**: [Your GitHub Profile]
-    - **LinkedIn**: [Your LinkedIn]
-    - **Portfolio**: [Your Portfolio Site]
-    
-    ---
-    
-    **Built with ❤️ using Streamlit**
-    
-    Version 1.0.0 | Last Updated: December 2024
-    """)
-    
-    # Technical details in expander
-    with st.expander("🔧 Technical Implementation Details"):
-        st.markdown("""
-        ### Data Generation
-        - Synthetic dataset with realistic patterns
-        - Seasonal trends (holiday season boost)
-        - Day-of-week effects
-        - Promotion impacts
-        - Random noise for realism
-        
-        ### Feature Engineering
-        - **Lag Features**: Previous day, week values
-        - **Rolling Statistics**: 7-day moving averages
-        - **Ratio Features**: Price-to-average comparisons
-        - **Interaction Terms**: Promotion × Weekend
-        
-        ### Model Training
-        - Train/test split (80/20)
-        - Feature scaling with StandardScaler
-        - Label encoding for categorical variables
-        - Cross-validation ready
-        
-        ### Performance Optimization
-        - Streamlit caching for data and models
-        - Efficient numpy operations
-        - Lazy loading of visualizations
-        """)
-    
-    # Quick start guide
-    with st.expander("🚀 Quick Start Guide"):
-        st.markdown("""
-        ### Installation
-        
-        ```bash
-        # Install dependencies
-        pip install streamlit pandas numpy scikit-learn xgboost matplotlib seaborn plotly
-        
-        # Run the app
-        streamlit run app.py
-        ```
-        
-        ### Configuration
-        
-        Use the sidebar to:
-        - Adjust dataset size (1K - 50K records)
-        - Enable/disable advanced features
-        - Navigate between pages
-        
-        ### Making Predictions
-        
-        1. Go to "Predict Demand" page
-        2. Fill in the form with product details
-        3. Click "Predict Demand"
-        4. Review recommendations
-        
-        ### Comparing Models
-        
-        1. Navigate to "Model Comparison"
-        2. View best performing model
-        3. Analyze comparison table
-        4. Select models for visualization
-        
-        ### Exploring Data
-        
-        1. Visit "Data Summary" page
-        2. Review key statistics
-        3. Analyze distributions
-        4. Examine time series trends
-        """)
+    **Built by Soumya using Streamlit**""")
 
 # ==================== RUN APP ====================
 if __name__ == "__main__":
