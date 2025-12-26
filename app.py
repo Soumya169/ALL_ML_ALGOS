@@ -23,7 +23,7 @@ import seaborn as sns
 
 st.set_page_config(
     page_title="Supply Chain ML Platform",
-    page_icon="_",
+    page_icon="🚀",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -67,7 +67,7 @@ st.markdown("""
         font-weight: 600;
     }
 </style>
-""",unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 @st.cache_data
 def generate_dataset(num_records=10000):
@@ -718,4 +718,3 @@ def show_about_page():
 # ==================== RUN APP ====================
 if __name__ == "__main__":
     main()
-
