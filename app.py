@@ -431,7 +431,8 @@ def show_model_comparison_page(results_df, trained_models, y_test):
     """, unsafe_allow_html=True)
     st.subheader("📊 All Models Comparison")
     display_df = results_df.copy()
-    display_df = display_df.style.background_gradient(subset=['test_rmse'], cmap='RdYlGn_r')\.background_gradient(subset=['test_r2'], cmap='RdYlGn')\
+    display_df = display_df.style.background_gradient(subset=['test_rmse'], cmap='RdYlGn_r')\
+                                  .background_gradient(subset=['test_r2'], cmap='RdYlGn')\
                                   .format({'test_rmse': '{:.2f}', 'test_mae': '{:.2f}', 
                                           'test_r2': '{:.4f}', 'test_mape': '{:.2f}%'})
     
@@ -717,3 +718,4 @@ def show_about_page():
 # ==================== RUN APP ====================
 if __name__ == "__main__":
     main()
+
