@@ -595,7 +595,7 @@ def show_data_summary_page(df):
     st.plotly_chart(fig_corr, use_container_width=True)
     
     # Sample data
-    st.subheader("🔍 Sample Data")
+    st.subheader(" Sample Data")
     st.dataframe(df.head(100), use_container_width=True)
 
 # ==================== ABOUT PAGE ====================
@@ -603,11 +603,9 @@ def show_about_page():
     st.header(" About This Project")
     
     st.markdown("""
-    ##  Smart Supply Chain Forecasting Platform
     
     A comprehensive machine learning application for demand forecasting in supply chain management.
     
-    ###  Features
     
     - **9 ML Algorithms**: Linear Regression, Ridge, Lasso, Decision Tree, Random Forest, 
       Gradient Boosting, XGBoost, SVR, and KNN
