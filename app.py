@@ -260,7 +260,6 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
     st.header(" Demand Forecasting")
     st.write("Enter product and market conditions to predict demand")
     
-    # Select best model
     best_model_name = results_df.iloc[0]['model']
     best_model = trained_models[best_model_name]['model']
     
@@ -296,7 +295,6 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
             submit = st.form_submit_button(" Predict Demand", use_container_width=True)
         
         if submit:
-            # Create feature vector
             input_data = {
                 'price': price,
                 'promotion': promotion,
@@ -362,7 +360,6 @@ def show_prediction_page(df, trained_models, results_df, scaler, le_category, le
         fig.update_layout(height=300)
         st.plotly_chart(fig, use_container_width=True)
 
-# ==================== MODEL COMPARISON PAGE ====================
 def show_model_comparison_page(results_df, trained_models, y_test):
     st.header(" Model Performance Comparison")
     
@@ -399,7 +396,6 @@ def show_model_comparison_page(results_df, trained_models, y_test):
     col1, col2 = st.columns(2)
     
     with col1:
-        # RMSE comparison
         fig_rmse = px.bar(results_df, x='model', y='test_rmse',title='Test RMSE Comparison (Lower is Better)',color='test_rmse', color_continuous_scale='RdYlGn_r')
         fig_rmse.update_layout(showlegend=False, xaxis_tickangle=-45)
         st.plotly_chart(fig_rmse, use_container_width=True)
@@ -449,7 +445,6 @@ def show_model_comparison_page(results_df, trained_models, y_test):
         fig.update_layout(height=400, showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
     
-    # Model insights
     st.subheader(" Key Insights")
     
     col1, col2, col3 = st.columns(3)
@@ -479,11 +474,9 @@ def show_model_comparison_page(results_df, trained_models, y_test):
         Standard deviation: {results_df['test_rmse'].std():.2f}
         """)
 
-################ DATA SUMMARY PAGE ####################
 def show_data_summary_page(df):
     st.header(" Dataset Overview")
     
-    # Overview metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -518,34 +511,29 @@ def show_data_summary_page(df):
         </div>
         """, unsafe_allow_html=True)
     
-    ####################### Date range ###############
     st.subheader("Data Timeline")
     col1, col2, col3 = st.columns(3)
     col1.metric("Start Date", df['date'].min().strftime('%Y-%m-%d'))
     col2.metric("End Date", df['date'].max().strftime('%Y-%m-%d'))
     col3.metric("Date Range", f"{(df['date'].max() - df['date'].min()).days} days")
     
-    ##################### Distribution visualizations ##############
     st.subheader(" Distributions")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        # Category distribution
         category_counts = df['category'].value_counts()
         fig_cat = px.pie(values=category_counts.values, names=category_counts.index,
                         title='Product Category Distribution')
         st.plotly_chart(fig_cat, use_container_width=True)
     
     with col2:
-        # Warehouse distribution
         warehouse_counts = df['warehouse'].value_counts()
         fig_wh = px.bar(x=warehouse_counts.index, y=warehouse_counts.values,
                        title='Warehouse Distribution',
                        labels={'x': 'Warehouse', 'y': 'Count'})
         st.plotly_chart(fig_wh, use_container_width=True)
     
-    # Time series analysis
     st.subheader(" Time Series Analysis")
     
     daily_stats = df.groupby('date').agg({
@@ -598,7 +586,6 @@ def show_data_summary_page(df):
     st.subheader(" Sample Data")
     st.dataframe(df.head(100), use_container_width=True)
 
-# ==================== ABOUT PAGE ====================
 def show_about_page():
     st.header(" About This Project")
     
@@ -642,6 +629,5 @@ def show_about_page():
     
     **Built by Soumya using Streamlit**""")
 
-# ==================== RUN APP ====================
 if __name__ == "__main__":
     main()
