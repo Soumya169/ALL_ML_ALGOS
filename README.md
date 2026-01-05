@@ -77,3 +77,45 @@ The Streamlit app allows users to:
 
 ---
 
+## 📸 Application Screenshots
+
+### 🧾 About Project Page
+Overview of the Smart Supply Chain Forecasting Platform, supported ML algorithms, and feature engineering.
+
+<p align="center">
+  <img src="assets/about.png" width="900">
+</p>
+
+---
+
+### 📈 Demand Prediction
+Real-time demand prediction using trained Machine Learning models with interactive inputs.
+
+<p align="center">
+  <img src="assets/predict.png" width="900">
+</p>
+
+---
+
+### 🧪 Model Performance Comparison
+Side-by-side comparison of all models using RMSE, MAE, and R² score to identify the best-performing model.
+
+<p align="center">
+  <img src="assets/model.png" width="900">
+</p>
+
+---
+
+### 📊 Dataset Summary & Insights
+Comprehensive dataset overview including total records, sales trends, distributions, and warehouse insights.
+
+<p align="center">
+  <img src="assets/datasummary.png" width="900">
+</p>
+
+---
+
+## ⭐ Support
+
+If you find this project useful, please consider giving it a **star ⭐**.  
+It helps improve visibility and motivates further development.
