@@ -1,17 +1,17 @@
-# 🚀 All Machine Learning Algorithms – End-to-End Implementation
+#  All Machine Learning Algorithms – End-to-End Implementation
 
 A comprehensive project showcasing the **implementation, comparison, and deployment of core Machine Learning algorithms** using real-world datasets.  
 This repository is designed for **learning, practice, and interview preparation**.
 
-🌐 **Live Application:**  
-👉 https://allmlalgos.streamlit.app/
+ **Live Application:**  
+https://allmlalgos.streamlit.app/
 
-📂 **GitHub Repository:**  
-👉 https://github.com/Soumya169/ALL_ML_ALGOS
+**GitHub Repository:**  
+https://github.com/Soumya169/ALL_ML_ALGOS
 
 ---
 
-## 📌 Project Objective
+##  Project Objective
 
 The main objective of this project is to:
 - Build a **strong foundation in Machine Learning algorithms**
@@ -23,9 +23,9 @@ This project also serves as a **portfolio project** for Data Analyst / ML Engine
 
 ---
 
-## 🧠 Machine Learning Algorithms Implemented
+## Machine Learning Algorithms Implemented
 
-### 🔹 Supervised Learning
+### Supervised Learning
 - Linear Regression  
 - Multiple Linear Regression  
 - Ridge Regression  
@@ -39,7 +39,7 @@ This project also serves as a **portfolio project** for Data Analyst / ML Engine
 
 ---
 
-## 📊 Model Evaluation Metrics
+## Model Evaluation Metrics
 
 - Accuracy  
 - Mean Absolute Error (MAE)  
@@ -50,7 +50,7 @@ These metrics are used to **compare and select the best-performing model**.
 
 ---
 
-## 🖥️ Web Application (Streamlit)
+## Web Application (Streamlit)
 
 The Streamlit app allows users to:
 - Select different ML algorithms  
@@ -59,11 +59,11 @@ The Streamlit app allows users to:
 - Visualize predictions and performance  
 - Compare multiple models interactively  
 
-🔗 **Live Demo:** https://allmlalgos.streamlit.app/
+**Live Demo:** https://allmlalgos.streamlit.app/
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Programming Language:** Python  
 - **Libraries:**  
@@ -110,7 +110,7 @@ Side-by-side comparison of all models using RMSE, MAE, and R² score to identify
 Comprehensive dataset overview including total records, sales trends, distributions, and warehouse insights.
 
 <p align="center">
-  <img src="datasummary.png" width="900">
+  <img src="datasummery.png" width="900">
 </p>
 
 ---
